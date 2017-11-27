@@ -9,6 +9,10 @@
 
 /* Contient les fonctions de la table des symboles */
 
+/**
+ * \brief initialise la table des symboles
+ * \return Pointeur sur la table des symboles initialisée
+ */
 static TableDesSymboles * const init_table()
 {
 	TableDesSymboles *liste = malloc(sizeof(*liste));
@@ -24,11 +28,11 @@ static TableDesSymboles * const init_table()
 	return liste;
 }
 
-//returns 1 if failed, 0 if succeeded 
-void  append(char*s, char c) {
-
-     strncat(s, &c, 1);
-}
+/**
+ * \brief crée un nouveau temporaire dans la table des symboles
+ * \param tds Pointeur sur la table des symboles
+ * \param v Valeur du temporaire créé 
+ */
 int new_temp(TableDesSymboles *tds, double v)
 {
 	int nDigits = floor(log10(abs(tds->taille))) + 1;
@@ -40,7 +44,7 @@ int new_temp(TableDesSymboles *tds, double v)
 	strcpy(buffer, "temp");
 	strcat(buffer, taille);
 	
-	symbole sb;
+	Symbole sb;
 	sb.nom = strdup(buffer);
 	sb.isConstant = True;
 	sb.valeur = v;
@@ -49,12 +53,73 @@ int new_temp(TableDesSymboles *tds, double v)
 	return tds->taille-1;
 }
 
-int add(TableDesSymboles *tds, symbole s)
+/**
+ * \brief Ajoute un symbole dans la table des symboles
+ * \param tds Pointeur sur la table des symboles
+ * \param s Symbole à ajouter
+ */
+int add(TableDesSymboles *tds, Symbole s)
 {
 	push_back(tds, s);
 	return tds->taille-1;
 }
 
+/**
+ * \brief Recherche d'un symbole dans la table des symboles
+ * \param tds Pointeur sur la table des symboles
+ * \param name Nom du symbole à chercher
+ * \return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
+ */
+Symbole * get_symbol(TableDesSymboles *tds, char * name)
+{
+	if (tds == NULL)
+	{
+		printf("toString : La table des symboles n'existe pas\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	Element *elem = tds->premier;
+	
+	while (elem != NULL && strcmp(name, elem->sb.nom) != 0)
+        elem = elem->suivant;
+	
+	
+	if (elem == NULL)
+		return NULL;
+	else
+		return &elem->sb;
+}
+
+/**
+ * \brief Recherche d'un symbole dans la table des symboles
+ * \param tds Pointeur sur la table des symboles
+ * \param id Indice du symbole à chercher
+ * \return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
+ */
+Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
+{
+	if (tds == NULL)
+	{
+		printf("toString : La table des symboles n'existe pas\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	Element *elem = tds->premier;
+	
+	while (elem != NULL && id != elem->sb.indice)
+        elem = elem->suivant;
+	
+	
+	if (elem == NULL)
+		return NULL;
+	else
+		return &elem->sb;
+}
+
+/**
+ * \brief Affiche le contenu de la table des symboles
+ * \param tds Pointeur sur la table des symboles
+ */
 void show_table(TableDesSymboles *tds)
 {
 	if (tds == NULL)
@@ -80,7 +145,7 @@ void show_table(TableDesSymboles *tds)
 }
 
 /* Fonctions internes */
-void push_front(TableDesSymboles *tds, symbole s)
+void push_front(TableDesSymboles *tds, Symbole s)
 {
 	Element *nouveau = malloc(sizeof(*nouveau));
 	
@@ -105,7 +170,7 @@ void push_front(TableDesSymboles *tds, symbole s)
 	tds->taille++;
 }
 
-void push_back(TableDesSymboles *tds, symbole s)
+void push_back(TableDesSymboles *tds, Symbole s)
 {
 	Element *nouveau = malloc(sizeof(*nouveau));
 	

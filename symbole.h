@@ -1,33 +1,52 @@
 #ifndef SYMBOLES_H
 #define SYMBOLES_H
-typedef enum boolean
+
+typedef enum Boolean Boolean;
+typedef struct Symbole Symbole;
+typedef struct Element Element;
+typedef struct TableDesSymboles TableDesSymboles;
+
+/**
+ *\enum les booleens qui seront utilisés seront de type "boolean" et prendront True ou False
+ */
+enum Boolean
 {
-	True, False
-} boolean;
-typedef struct symbole
+	True, 
+	False
+};
+
+/**
+ *\struct symbole symbole.h "Définition des symboles et de la table des symboles"
+ */
+struct Symbole
 {
     int indice;
     char *nom;
-	boolean isConstant;
+	Boolean isConstant;
 	double valeur;
-} symbole;
+};
 
-/* liste chainee de symboles */
-typedef struct Element Element;
+/**
+ * \struct élément de la liste chainée
+ */
 struct Element
 {
-	symbole sb;
+	Symbole sb;
     Element *suivant;
 };
-typedef struct TableDesSymboles TableDesSymboles;
+
+/**
+ * \struct Liste chainée représentant la table des symboles
+ */
 struct TableDesSymboles
 {
 	Element *premier;
     int taille;
 };
 
-void push_front(TableDesSymboles *tds, symbole s);
-void push_back(TableDesSymboles *tds, symbole s);
+/* fonctions internes de la liste chainée */
+void push_front(TableDesSymboles *tds, Symbole s);
+void push_back(TableDesSymboles *tds, Symbole s);
 void show_table(TableDesSymboles *tds);
 void erase_first(TableDesSymboles *tds);
 #endif
