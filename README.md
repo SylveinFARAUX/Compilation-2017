@@ -7,7 +7,7 @@ Contient les fichiers lex (.l), yacc (.y) et les divers
 - FARAUX Sylvein
 
 ## First clone
-Coming soon
+23 / 11 / 2017
 
 ## How to commit
 
@@ -17,7 +17,6 @@ Strategy is coming soon.
 
 Pull -> Commit -> Push.
 Don't forget to comment every commits.
-Help (Linux) : 
 
 ### Help (Linux)
 
