@@ -7,7 +7,7 @@ typedef struct Element Element;
 typedef struct TableDesSymboles TableDesSymboles;
 
 /**
- *\enum les booleens qui seront utilisés seront de type "boolean" et prendront True ou False
+ * @enum les booleens qui seront utilisés seront de type "boolean" et prendront True ou False
  */
 enum Boolean
 {
@@ -16,7 +16,7 @@ enum Boolean
 };
 
 /**
- *\struct symbole symbole.h "Définition des symboles et de la table des symboles"
+ * @struct symbole symbole.h "Définition des symboles et de la table des symboles"
  */
 struct Symbole
 {
@@ -27,7 +27,7 @@ struct Symbole
 };
 
 /**
- * \struct élément de la liste chainée
+ * @struct élément de la liste chainée
  */
 struct Element
 {
@@ -36,7 +36,7 @@ struct Element
 };
 
 /**
- * \struct Liste chainée représentant la table des symboles
+ * @struct Liste chainée représentant la table des symboles
  */
 struct TableDesSymboles
 {

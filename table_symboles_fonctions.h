@@ -10,8 +10,8 @@
 /* Contient les fonctions de la table des symboles */
 
 /**
- * \brief initialise la table des symboles
- * \return Pointeur sur la table des symboles initialisée
+ * @brief initialise la table des symboles
+ * @return Pointeur sur la table des symboles initialisée
  */
 static TableDesSymboles * const init_table()
 {
@@ -29,9 +29,9 @@ static TableDesSymboles * const init_table()
 }
 
 /**
- * \brief crée un nouveau temporaire dans la table des symboles
- * \param tds Pointeur sur la table des symboles
- * \param v Valeur du temporaire créé 
+ * @brief crée un nouveau temporaire dans la table des symboles
+ * @param tds Pointeur sur la table des symboles
+ * @param v Valeur du temporaire créé 
  */
 int new_temp(TableDesSymboles *tds, double v)
 {
@@ -54,9 +54,9 @@ int new_temp(TableDesSymboles *tds, double v)
 }
 
 /**
- * \brief Ajoute un symbole dans la table des symboles
- * \param tds Pointeur sur la table des symboles
- * \param s Symbole à ajouter
+ * @brief Ajoute un symbole dans la table des symboles
+ * @param tds Pointeur sur la table des symboles
+ * @param s Symbole à ajouter
  */
 int add(TableDesSymboles *tds, Symbole s)
 {
@@ -65,10 +65,10 @@ int add(TableDesSymboles *tds, Symbole s)
 }
 
 /**
- * \brief Recherche d'un symbole dans la table des symboles
- * \param tds Pointeur sur la table des symboles
- * \param name Nom du symbole à chercher
- * \return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
+ * @brief Recherche d'un symbole dans la table des symboles
+ * @param tds Pointeur sur la table des symboles
+ * @param name Nom du symbole à chercher
+ * @return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
  */
 Symbole * get_symbol(TableDesSymboles *tds, char * name)
 {
@@ -91,10 +91,10 @@ Symbole * get_symbol(TableDesSymboles *tds, char * name)
 }
 
 /**
- * \brief Recherche d'un symbole dans la table des symboles
- * \param tds Pointeur sur la table des symboles
- * \param id Indice du symbole à chercher
- * \return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
+ * @brief Recherche d'un symbole dans la table des symboles
+ * @param tds Pointeur sur la table des symboles
+ * @param id Indice du symbole à chercher
+ * @return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
  */
 Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
 {
@@ -117,8 +117,8 @@ Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
 }
 
 /**
- * \brief Affiche le contenu de la table des symboles
- * \param tds Pointeur sur la table des symboles
+ * @brief Affiche le contenu de la table des symboles
+ * @param tds Pointeur sur la table des symboles
  */
 void show_table(TableDesSymboles *tds)
 {
