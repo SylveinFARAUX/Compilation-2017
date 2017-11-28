@@ -92,103 +92,103 @@ Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
 }
 
 /**
- * @brief Affiche le contenu de la table des symboles
- * @param tds Pointeur sur la table des symboles
- *-/
-void show_table(TableDesSymboles *tds)
+ * @brief Affiche le contenu de la liste des quads
+ * @param tds Pointeur sur la liste des quads
+ */
+void qshow_table(ListeQuad *lq)
 {
-	if (tds == NULL)
+	if (lq == NULL)
 	{
-		printf("toString : La table des symboles n'existe pas\n");
+		printf("toString : La liste de quads n'existe pas\n");
 		exit(EXIT_FAILURE);
 	}
 	
-	Element *elem = tds->premier;
-	printf("La table des symboles contient %d elts :\nnom\tindice\tconstance\tvaleur\n", tds->taille);
+	QElement *elem = lq->premier;
+	printf("La liste des quads contient %d elts :\nindice\tlabel\toperateur\targ1\targ2\targ3\tresult\n", lq->taille);
 	
 	while (elem != NULL)
 	{
-		char *cons;
-        if (elem->sb.isConstant == True)
-			cons= "constant";
-		else
-			cons = "variable";
+		char *op;
+		switch(elem->q.operateur){
+			case ASSIGN:
+				op = "ASSIGN";
+			break;
+			case PLUS:
+				op = "PLUS";
+			break;
+			case MULT:
+				op = "MULTIPLICATION";
+			break;
+			case MINUS:
+				op = "MINUS";
+			break;
+			case DIV:
+				op = "DIVISION";
+			break;
+			case GOTO: 
+				op = "GOTO";
+			break;
+			case EQUAL:
+				op = "EQUAL";
+			break;
+			default:
+				op = "non reconnu";
+			break;
+		}
 
-        printf("%s\t%d\t%s\t%f\n", elem->sb.nom, elem->sb.indice, cons, elem->sb.valeur);
+        printf("%d\t%s\t%s\t%s\t%s\t%s\n", elem->q.indice, elem->q.label, op, elem->q.arg1, elem->q.arg2, elem->q.result);
         elem = elem->suivant;
 	}
 }
-*/
+
 /* Fonctions internes */
-void qpush_front(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label)
+void qpush_back(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label)
 {
 	QElement *nouveau = malloc(sizeof(*nouveau));
 	
 	if (lq == NULL || nouveau == NULL)
 	{
-		printf("push_front : Impossible d'allouer de la memoire a la table des symboles\n");
+		printf("qpush_back : Impossible d'allouer de la memoire a la liste de quads\n");
 		exit(EXIT_FAILURE);
 	}
 	
-/*struct quad{
-	int indice;
-	char *label;
-	char *arg1, *arg2, *result;
-	Operateur operateur;
-};*/
 	Quad q;
 	q.label		= label;
 	q.arg1		= arg1;
 	q.arg2		= arg2;
 	q.result	= result;
 	q.operateur = op;
-
+	
     nouveau->q = q;
     nouveau->suivant = NULL;
     nouveau->q.indice = lq->taille;
-	
-	if (lq->premier == NULL) //Si la table des symbooles ne contient pas encore d'element
-		lq->premier = nouveau;
-	else
-	{
-		nouveau->suivant = lq->premier;
-		lq->premier = nouveau;
-	}
-	
-	lq->taille++;
-}
 
-/*void push_back(TableDesSymboles *tds, Symbole s)
-{
-	Element *nouveau = malloc(sizeof(*nouveau));
-	
-	if (tds == NULL || nouveau == NULL)
+    if (lq->taille == 0)
+		lq->premier = nouveau;
+	else if (lq->taille == 1)
+		lq->premier->suivant = nouveau;
+    else if (lq->taille > 1)
 	{
-		printf("push_back : Impossible d'allouer de la memoire a la table des symboles\n");
-		exit(EXIT_FAILURE);
-	}
-	
-    nouveau->sb = s;
-    nouveau->suivant = NULL;
-    nouveau->sb.indice = tds->taille;
-
-    if (tds->taille == 0)
-		tds->premier = nouveau;
-	else if (tds->taille == 1)
-		tds->premier->suivant = nouveau;
-    else if (tds->taille > 1)
-	{
-        Element *elem = tds->premier;
+        QElement *elem = lq->premier;
 		
 		while(elem->suivant != NULL)
 			elem = elem->suivant;
 		
         elem->suivant = nouveau;
     }
-    tds->taille = tds->taille + 1;
+    lq->taille = lq->taille + 1;
 }
 
-void erase_first(TableDesSymboles *tds)
+ArgumentType getArgType(char * arg)
+{
+	if (strncmp(arg, type_symbole, 5) == 0)
+		return SYMBOLE;
+	else if(strncmp(arg, type_label, 5) == 0)
+		return LABEL;
+	else
+		return UNDEFINED;
+}
+/*void erase_first(TableDesSymboles *tds)
 {
 	if (tds == NULL)
 		exit(EXIT_FAILURE);

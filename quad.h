@@ -4,11 +4,13 @@
 #include "symbole.h"
 
 typedef enum OPERATEUR Operateur;
+typedef enum ARGUMENT_TYPE ArgumentType;
 typedef struct quad Quad;
 typedef struct QElement QElement;
 typedef struct ListeQuad ListeQuad;
 
-enum OPERATEUR{ADD, MULT, SOUS, DIV, EQ};
+enum OPERATEUR{ASSIGN, PLUS, MULT, MINUS, DIV, GOTO, EQUAL};
+enum ARGUMENT_TYPE{SYMBOLE, LABEL, UNDEFINED};
 
 struct quad{
 	int indice;
@@ -35,9 +37,12 @@ struct ListeQuad
 	int taille;
 };
 
+char const type_symbole[] = "symbl:";
+char const type_label[] = "label:";
+
 /* fonctions internes de la liste chainée */
-void qpush_front(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label);
-/*void qpush_back(TableDesSymboles *tds, Symbole s);
-void qshow_table(TableDesSymboles *tds);
-void qerase_first(TableDesSymboles *tds);*/
+void qpush_back(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label);
+void qshow_table(ListeQuad *lq);
+ArgumentType getArgType(char * arg);
+/*void qerase_first(TableDesSymboles *tds);*/
 #endif

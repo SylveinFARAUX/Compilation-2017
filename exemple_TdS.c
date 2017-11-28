@@ -71,7 +71,11 @@ int main(){
 	Symbole *trouve = get_symbol(tds, "bBack");
 	
 	ListeQuad *lq = init_QList();
-//void qpush_front(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label)
-	qpush_front(lq, ADD, "hehe", NULL, NULL, NULL);
+
+	qpush_back(lq, PLUS, "symbl:hehe", "symbl:hi", "symbl:boubou", NULL);
+	qpush_back(lq, GOTO, "label:momo", NULL, NULL, NULL);
+	qpush_back(lq, EQUAL, "symbl:s1", "symbl:s2", NULL, NULL);
+	qshow_table(lq);
+	
 	return 0;
 }
