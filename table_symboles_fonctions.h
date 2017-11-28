@@ -116,6 +116,22 @@ Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
 		return &elem->sb;
 }
 
+Symbole * next_symbol(TableDesSymboles *tds, Symbole * sb)
+{
+	if (tds == NULL || sb == NULL)
+	{
+		printf("toString : La table des symboles ou le symbole n'existe pas\n");
+		exit(EXIT_FAILURE);
+	}
+
+	Element *elem = tds->premier;
+	while (&elem->sb != sb && elem != NULL)
+		elem = elem->suivant;
+	if (elem == NULL)
+		return NULL;
+	else
+		return &elem->suivant->sb;
+}
 /**
  * @brief Affiche le contenu de la table des symboles
  * @param tds Pointeur sur la table des symboles

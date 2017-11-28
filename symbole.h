@@ -41,7 +41,7 @@ struct Element
 struct TableDesSymboles
 {
 	Element *premier;
-    int taille;
+    	int taille;
 };
 
 /* fonctions internes de la liste chainée */
