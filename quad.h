@@ -9,7 +9,7 @@ typedef struct quad Quad;
 typedef struct QElement QElement;
 typedef struct ListeQuad ListeQuad;
 
-enum OPERATEUR{ASSIGN, PLUS, MULT, MINUS, DIV, GOTO, EQUAL};
+enum OPERATEUR{ASSIGN, CREATEVAR, PLUS, MULT, MINUS, DIV, GOTO, EQUAL};
 enum ARGUMENT_TYPE{SYMBOLE, LABEL, UNDEFINED};
 
 struct quad{
@@ -43,6 +43,7 @@ char const type_label[] = "label:";
 /* fonctions internes de la liste chainée */
 void qpush_back(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label);
 void qshow_table(ListeQuad *lq);
+char * get_arg(char * arg);
 ArgumentType getArgType(char * arg);
 /*void qerase_first(TableDesSymboles *tds);*/
 #endif

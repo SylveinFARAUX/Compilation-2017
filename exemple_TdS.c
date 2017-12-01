@@ -72,10 +72,12 @@ int main(){
 	
 	ListeQuad *lq = init_QList();
 
-	qpush_back(lq, PLUS, "symbl:hehe", "symbl:hi", "symbl:boubou", NULL);
+	/*qpush_back(lq, PLUS, "symbl:hehe", "symbl:hi", "symbl:boubou", NULL);
 	qpush_back(lq, GOTO, "label:momo", NULL, NULL, NULL);
 	qpush_back(lq, EQUAL, "symbl:s1", "symbl:s2", NULL, NULL);
-	qshow_table(lq);
-	
+	//qshow_table(lq);//*/
+	char * buffer;
+	new_temp(tds, 1, &buffer);
+	genquad(lq, CREATEVAR, buffer, NULL, NULL, NULL);
 	return 0;
 }

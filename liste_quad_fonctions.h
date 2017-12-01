@@ -32,11 +32,9 @@ static ListeQuad * const init_QList()
  * @brief Ajoute un symbole dans la table des symboles
  * @param tds Pointeur sur la table des symboles
  * @param s Symbole à ajouter
- *-/
-int gen(ListeQuad *lq, Symbole s)
-{
-	push_back(tds, s);
-	return tds->taille-1;
+ */
+void genquad(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label){
+	qpush_back(lq, op, arg1, arg2, result, label);
 }
 
 /**
@@ -136,6 +134,19 @@ void qshow_table(ListeQuad *lq)
 			break;
 		}
 
+		switch(getArgType(elem->q.arg1)){
+			case SYMBOLE:
+				printf("symbole %s\n", get_arg(elem->q.arg1));
+			break;
+			case LABEL:
+				printf("label %s\n", get_arg(elem->q.arg1));
+			break;
+			case UNDEFINED:
+				printf("undefined\n");
+			break;
+			default:
+			printf("defaut\n");
+		}
         printf("%d\t%s\t%s\t%s\t%s\t%s\n", elem->q.indice, elem->q.label, op, elem->q.arg1, elem->q.arg2, elem->q.result);
         elem = elem->suivant;
 	}
@@ -187,6 +198,18 @@ ArgumentType getArgType(char * arg)
 		return LABEL;
 	else
 		return UNDEFINED;
+}
+
+char * get_arg(char * arg)
+{
+	char retour[strlen(arg)-5];
+	int i;
+	
+	for (i=6; i< strlen(arg); i++)
+		retour[i-6] = arg[i];
+	retour[strlen(arg)-6] = '\0';
+	
+	return &retour;
 }
 /*void erase_first(TableDesSymboles *tds)
 {
