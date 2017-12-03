@@ -22,28 +22,40 @@ static TableDesSymboles * const init_table()
 }
 
 /**
- * @brief crée un nouveau temporaire dans la table des symboles
- * @param tds Pointeur sur la table des symboles
- * @param v Valeur du temporaire créé
+ *  @brief crée un nouveau temporaire dans la table des symboles
+ *  
+ *  @param [in] tds Pointeur sur la table des symboles
+ *  @param [in] v Valeur du temporaire créé
+ *  @param [in] result stockage du mot final à rendre à gencode
  */
 int new_temp(TableDesSymboles *tds, double v)
 {
-	int nDigits = floor(log10(abs(tds->taille))) + 1;
+	int nDigits;
+	if (tds->taille > 0)
+		nDigits = floor(log10(abs(tds->taille))) + 1;
+	else
+		nDigits = 1;
+
 	char taille[nDigits+1];
 	sprintf(taille, "%d", tds->taille);
-
+	
 	//creation du mot final
 	char buffer[5+nDigits];
 	strcpy(buffer, "temp");
 	strcat(buffer, taille);
-
+	buffer[4+nDigits] = '\0';
 	Symbole sb;
 	sb.nom = strdup(buffer);
 	sb.isConstant = True;
 	sb.valeur = v;
 
 	push_back(tds, sb);
-	return tds->taille-1;
+	
+	//stockage de symbl:tempx dans result
+	/*char symbl[7+strlen(buffer)];
+	strcpy(symbl, "symbl:");
+	strcat(symbl, buffer);*/
+	*result = strdup(buffer);
 }
 
 /**

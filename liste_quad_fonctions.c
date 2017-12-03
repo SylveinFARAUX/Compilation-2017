@@ -25,63 +25,9 @@ static ListeQuad * const init_QList()
  * @brief Ajoute un symbole dans la table des symboles
  * @param tds Pointeur sur la table des symboles
  * @param s Symbole à ajouter
- *-/
-int gen(ListeQuad *lq, Symbole s)
-{
-	push_back(tds, s);
-	return tds->taille-1;
-}
-
-/**
- * @brief Recherche d'un symbole dans la table des symboles
- * @param tds Pointeur sur la table des symboles
- * @param name Nom du symbole à chercher
- * @return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
- *-/
-Symbole * get_symbol(TableDesSymboles *tds, char * name)
-{
-	if (tds == NULL)
-	{
-		printf("toString : La table des symboles n'existe pas\n");
-		exit(EXIT_FAILURE);
-	}
-
-	Element *elem = tds->premier;
-
-	while (elem != NULL && strcmp(name, elem->sb.nom) != 0)
-        elem = elem->suivant;
-
-
-	if (elem == NULL)
-		return NULL;
-	else
-		return &elem->sb;
-}
-
-/**
- * @brief Recherche d'un symbole dans la table des symboles
- * @param tds Pointeur sur la table des symboles
- * @param id Indice du symbole à chercher
- * @return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
- *-/
-Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
-{
-	if (tds == NULL)
-	{
-		printf("toString : La table des symboles n'existe pas\n");
-		exit(EXIT_FAILURE);
-	}
-
-	Element *elem = tds->premier;
-
-	while (elem != NULL && id != elem->sb.indice)
-        elem = elem->suivant;
-
-
-	if (elem == NULL)
-		return NULL;
-	else
-		return &elem->sb;
+ */
+void genquad(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label){
+	qpush_back(lq, op, arg1, arg2, result, label);
 }
 
 /**
@@ -181,17 +127,15 @@ ArgumentType getArgType(char * arg)
 	else
 		return UNDEFINED;
 }
-/*void erase_first(TableDesSymboles *tds)
+
+char * get_arg(char * arg)
 {
-	if (tds == NULL)
-		exit(EXIT_FAILURE);
-
-	if (tds->premier != NULL)
-	{
-		Element *aSupprimer = tds->premier;
-		tds->premier = tds->premier->suivant;
-
-		free(aSupprimer);
-		tds->taille--;
-	}
-}*/
+	char retour[strlen(arg)-5];
+	int i;
+	
+	for (i=6; i< strlen(arg); i++)
+		retour[i-6] = arg[i];
+	retour[strlen(arg)-6] = '\0';
+	
+	return &retour;
+}
