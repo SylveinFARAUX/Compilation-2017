@@ -38,6 +38,8 @@ void affichercodemips(TableDesSymboles *tds)
 
 int main(){
 	
+	char * buffer;
+	
 	//Initialiser la table
 	TableDesSymboles *tds = init_table();
 	
@@ -59,7 +61,7 @@ int main(){
 	add(tds, a);
 	
 	//Ajout d'un temporaire qui a pour valeur 42
-	new_temp(tds, 42.6);
+	new_temp(tds, 42.6, &buffer);
 	
 	//Ajout d'un symbole (ici b)
 	add(tds,b);
@@ -76,7 +78,7 @@ int main(){
 	qpush_back(lq, GOTO, "label:momo", NULL, NULL, NULL);
 	qpush_back(lq, EQUAL, "symbl:s1", "symbl:s2", NULL, NULL);
 	//qshow_table(lq);//*/
-	char * buffer;
+	
 	new_temp(tds, 1, &buffer);
 	genquad(lq, CREATEVAR, buffer, NULL, NULL, NULL);
 	return 0;

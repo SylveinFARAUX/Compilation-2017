@@ -28,7 +28,7 @@ static TableDesSymboles * const init_table()
  *  @param [in] v Valeur du temporaire créé
  *  @param [in] result stockage du mot final à rendre à gencode
  */
-int new_temp(TableDesSymboles *tds, double v)
+int new_temp(TableDesSymboles *tds, double v, char **result)
 {
 	int nDigits;
 	if (tds->taille > 0)

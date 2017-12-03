@@ -45,5 +45,4 @@ void qpush_back(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * re
 void qshow_table(ListeQuad *lq);
 char * get_arg(char * arg);
 ArgumentType getArgType(char * arg);
-/*void qerase_first(TableDesSymboles *tds);*/
 #endif
