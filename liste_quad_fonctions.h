@@ -13,20 +13,7 @@
  * @brief initialise la table des symboles
  * @return Pointeur sur la table des symboles initialisée
  */
-static ListeQuad * const init_QList()
-{
-	ListeQuad *liste = malloc(sizeof(*liste));
-	
-    if (liste == NULL)
-	{
-		printf("init_QList : Impossible d'allouer de la memoire a la liste de quad\n");
-		exit(EXIT_FAILURE);
-	}
-	liste->premier = NULL;
-    liste->taille = 0;
-
-	return liste;
-}
+static ListeQuad * const init_QList();
 
 /**
  * @brief Ajoute un symbole dans la table des symboles
@@ -43,25 +30,7 @@ void genquad(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * resul
  * @param name Nom du symbole à chercher
  * @return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
  *-/
-Symbole * get_symbol(TableDesSymboles *tds, char * name)
-{
-	if (tds == NULL)
-	{
-		printf("toString : La table des symboles n'existe pas\n");
-		exit(EXIT_FAILURE);
-	}
-	
-	Element *elem = tds->premier;
-	
-	while (elem != NULL && strcmp(name, elem->sb.nom) != 0)
-        elem = elem->suivant;
-	
-	
-	if (elem == NULL)
-		return NULL;
-	else
-		return &elem->sb;
-}
+Symbole * get_symbol(TableDesSymboles *tds, char * name);
 
 /**
  * @brief Recherche d'un symbole dans la table des symboles
@@ -69,70 +38,12 @@ Symbole * get_symbol(TableDesSymboles *tds, char * name)
  * @param id Indice du symbole à chercher
  * @return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
  *-/
-Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
-{
-	if (tds == NULL)
-	{
-		printf("toString : La table des symboles n'existe pas\n");
-		exit(EXIT_FAILURE);
-	}
-	
-	Element *elem = tds->premier;
-	
-	while (elem != NULL && id != elem->sb.indice)
-        elem = elem->suivant;
-	
-	
-	if (elem == NULL)
-		return NULL;
-	else
-		return &elem->sb;
-}
-
+Symbole * get_symbol_by_id(TableDesSymboles *tds, int id);
 /**
  * @brief Affiche le contenu de la liste des quads
  * @param tds Pointeur sur la liste des quads
  */
-void qshow_table(ListeQuad *lq)
-{
-	if (lq == NULL)
-	{
-		printf("toString : La liste de quads n'existe pas\n");
-		exit(EXIT_FAILURE);
-	}
-	
-	QElement *elem = lq->premier;
-	printf("La liste des quads contient %d elts :\nindice\tlabel\toperateur\targ1\targ2\targ3\tresult\n", lq->taille);
-	
-	while (elem != NULL)
-	{
-		char *op;
-		switch(elem->q.operateur){
-			case ASSIGN:
-				op = "ASSIGN";
-			break;
-			case PLUS:
-				op = "PLUS";
-			break;
-			case MULT:
-				op = "MULTIPLICATION";
-			break;
-			case MINUS:
-				op = "MINUS";
-			break;
-			case DIV:
-				op = "DIVISION";
-			break;
-			case GOTO: 
-				op = "GOTO";
-			break;
-			case EQUAL:
-				op = "EQUAL";
-			break;
-			default:
-				op = "non reconnu";
-			break;
-		}
+void qshow_table(ListeQuad *lq);
 
 		switch(getArgType(elem->q.arg1)){
 			case SYMBOLE:
@@ -153,42 +64,9 @@ void qshow_table(ListeQuad *lq)
 }
 
 /* Fonctions internes */
-void qpush_back(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label)
-{
-	QElement *nouveau = malloc(sizeof(*nouveau));
-	
-	if (lq == NULL || nouveau == NULL)
-	{
-		printf("qpush_back : Impossible d'allouer de la memoire a la liste de quads\n");
-		exit(EXIT_FAILURE);
-	}
-	
-	Quad q;
-	q.label		= label;
-	q.arg1		= arg1;
-	q.arg2		= arg2;
-	q.result	= result;
-	q.operateur = op;
-	
-    nouveau->q = q;
-    nouveau->suivant = NULL;
-    nouveau->q.indice = lq->taille;
+void qpush_back(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label);
 
-    if (lq->taille == 0)
-		lq->premier = nouveau;
-	else if (lq->taille == 1)
-		lq->premier->suivant = nouveau;
-    else if (lq->taille > 1)
-	{
-        QElement *elem = lq->premier;
-		
-		while(elem->suivant != NULL)
-			elem = elem->suivant;
-		
-        elem->suivant = nouveau;
-    }
-    lq->taille = lq->taille + 1;
-}
+ArgumentType getArgType(char * arg);
 
 ArgumentType getArgType(char * arg)
 {

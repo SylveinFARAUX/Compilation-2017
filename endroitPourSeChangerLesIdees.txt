@@ -1,0 +1,12 @@
+dans calc.l ,
+j'ai mis tout ce qui me passait par la tete 
+donc y a des tokens qu'on ne va pas utiliser.
+je supprimerai ls tokens non utilises plustard.
+
+dans le fichier calc.y
+
+là,je suis entrain d ecrire la grammaire,
+j'ai pas encore mis les attributs ou les types.
+je suis entrain de le faire
+
+N hesite pas à corriger ou supprimer des trucs 
