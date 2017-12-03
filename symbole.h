@@ -49,4 +49,11 @@ void push_front(TableDesSymboles *tds, Symbole s);
 void push_back(TableDesSymboles *tds, Symbole s);
 void show_table(TableDesSymboles *tds);
 void erase_first(TableDesSymboles *tds);
+/* fonctions de la table des symboles */
+static TableDesSymboles * const init_table();
+Symbole * get_symbol(TableDesSymboles *tds, char * name);
+Symbole * get_symbol_by_id(TableDesSymboles *tds, int id);
+Symbole * next_symbol(TableDesSymboles *tds, Symbole * sb);
+Symbole * new_temp(TableDesSymboles *tds, double v);
+Symbole * add(TableDesSymboles *tds, Symbole s);
 #endif

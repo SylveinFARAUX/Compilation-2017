@@ -44,7 +44,7 @@ int main(){
 	TableDesSymboles *tds = init_table();
 	
 	//Création des symboles a, b et c
-	Symbole a, b, c;
+	Symbole a, b;
 	a.nom = "a";
 	a.isConstant = True;
 	a.valeur = 142;
@@ -53,15 +53,11 @@ int main(){
 	b.isConstant = False;
 	b.valeur= 20;
 
-	c.nom = "c";
-	c.isConstant = False;
-	c.valeur = 4.79;
-
 	//Ajout d'un symbole (ici a)
 	add(tds, a);
 	
 	//Ajout d'un temporaire qui a pour valeur 42
-	new_temp(tds, 42.6, &buffer);
+	Symbole * temp = new_temp(tds, 42);
 	
 	//Ajout d'un symbole (ici b)
 	add(tds,b);
@@ -74,12 +70,20 @@ int main(){
 	
 	ListeQuad *lq = init_QList();
 
-	/*qpush_back(lq, PLUS, "symbl:hehe", "symbl:hi", "symbl:boubou", NULL);
-	qpush_back(lq, GOTO, "label:momo", NULL, NULL, NULL);
-	qpush_back(lq, EQUAL, "symbl:s1", "symbl:s2", NULL, NULL);
-	//qshow_table(lq);//*/
+	//Génération des quads correspondant
+	genquad(lq, CREATEVAR, a.nom, NULL, NULL, NULL);
+	genquad(lq, CREATEVAR, temp->nom, NULL, NULL, NULL);
+	genquad(lq, CREATEVAR, b.nom, NULL, NULL, NULL);
 	
-	new_temp(tds, 1, &buffer);
-	genquad(lq, CREATEVAR, buffer, NULL, NULL, NULL);
+	//Génération d'un quad de calcul (exemple addition) :
+	//création du temporaire dans lequel sera stoqué le résultat
+	Symbole * ptr = new_temp(tds,0);
+	genquad(lq, CREATEVAR, ptr->nom, NULL, NULL, NULL);
+	//Quad de calcul
+	genquad(lq, PLUS, a.nom, temp->nom, ptr->nom, NULL);
+	
+	qshow_liste(lq);
+	
+	
 	return 0;
 }

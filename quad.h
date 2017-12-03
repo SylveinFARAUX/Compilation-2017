@@ -42,7 +42,7 @@ char const type_label[] = "label:";
 
 /* fonctions internes de la liste chainée */
 void qpush_back(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * result, char * label);
-void qshow_table(ListeQuad *lq);
+void qshow_liste(ListeQuad *lq);
 char * get_arg(char * arg);
 ArgumentType getArgType(char * arg);
 #endif

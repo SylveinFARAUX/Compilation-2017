@@ -29,13 +29,39 @@ static TableDesSymboles * const init_table()
 }
 
 /**
+ * @brief Recherche d'un symbole dans la table des symboles
+ * @param tds Pointeur sur la table des symboles
+ * @param id Indice du symbole à chercher
+ * @return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
+ */
+Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
+{
+	if (tds == NULL)
+	{
+		printf("toString : La table des symboles n'existe pas\n");
+		exit(EXIT_FAILURE);
+	}
+
+	Element *elem = tds->premier;
+
+	while (elem != NULL && id != elem->sb.indice)
+        elem = elem->suivant;
+
+
+	if (elem == NULL)
+		return NULL;
+	else
+		return &elem->sb;
+}
+
+/**
  *  @brief crée un nouveau temporaire dans la table des symboles
  *  
  *  @param [in] tds Pointeur sur la table des symboles
  *  @param [in] v Valeur du temporaire créé
  *  @param [in] result stockage du mot final à rendre à gencode
  */
-int new_temp(TableDesSymboles *tds, double v, char **result)
+Symbole * new_temp(TableDesSymboles *tds, double v)
 {
 	int nDigits;
 	if (tds->taille > 0)
@@ -61,8 +87,9 @@ int new_temp(TableDesSymboles *tds, double v, char **result)
 	//stockage de symbl:tempx dans result
 	/*char symbl[7+strlen(buffer)];
 	strcpy(symbl, "symbl:");
-	strcat(symbl, buffer);*/
-	*result = strdup(buffer);
+	strcat(symbl, buffer);
+	*result = strdup(buffer);*/
+	return get_symbol_by_id(tds, tds->taille-1);
 }
 
 /**
@@ -70,10 +97,10 @@ int new_temp(TableDesSymboles *tds, double v, char **result)
  * @param tds Pointeur sur la table des symboles
  * @param s Symbole à ajouter
  */
-int add(TableDesSymboles *tds, Symbole s)
+Symbole * add(TableDesSymboles *tds, Symbole s)
 {
 	push_back(tds, s);
-	return tds->taille-1;
+	return get_symbol_by_id(tds, tds->taille-1);
 }
 
 /**
@@ -93,32 +120,6 @@ Symbole * get_symbol(TableDesSymboles *tds, char * name)
 	Element *elem = tds->premier;
 
 	while (elem != NULL && strcmp(name, elem->sb.nom) != 0)
-        elem = elem->suivant;
-
-
-	if (elem == NULL)
-		return NULL;
-	else
-		return &elem->sb;
-}
-
-/**
- * @brief Recherche d'un symbole dans la table des symboles
- * @param tds Pointeur sur la table des symboles
- * @param id Indice du symbole à chercher
- * @return Pointeur sur le symbole trouvé (sinon pointeur sur NULL)
- */
-Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
-{
-	if (tds == NULL)
-	{
-		printf("toString : La table des symboles n'existe pas\n");
-		exit(EXIT_FAILURE);
-	}
-
-	Element *elem = tds->premier;
-
-	while (elem != NULL && id != elem->sb.indice)
         elem = elem->suivant;
 
 

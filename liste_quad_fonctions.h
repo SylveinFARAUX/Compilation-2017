@@ -41,7 +41,7 @@ void genquad(ListeQuad *lq, Operateur op, char * arg1, char * arg2, char * resul
  * @brief Affiche le contenu de la liste des quads
  * @param tds Pointeur sur la liste des quads
  */
-void qshow_table(ListeQuad *lq)
+void qshow_liste(ListeQuad *lq)
 {
 	if (lq == NULL)
 	{
