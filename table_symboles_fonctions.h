@@ -61,7 +61,7 @@ Symbole * get_symbol_by_id(TableDesSymboles *tds, int id)
  *  @param [in] v Valeur du temporaire créé
  *  @param [in] result stockage du mot final à rendre à gencode
  */
-Symbole * new_temp(TableDesSymboles *tds, double v)
+Symbole * new_temp(TableDesSymboles *tds, int v)
 {
 	int nDigits;
 	if (tds->taille > 0)
@@ -84,11 +84,6 @@ Symbole * new_temp(TableDesSymboles *tds, double v)
 
 	push_back(tds, sb);
 	
-	//stockage de symbl:tempx dans result
-	/*char symbl[7+strlen(buffer)];
-	strcpy(symbl, "symbl:");
-	strcat(symbl, buffer);
-	*result = strdup(buffer);*/
 	return get_symbol_by_id(tds, tds->taille-1);
 }
 
@@ -176,7 +171,7 @@ void show_table(TableDesSymboles *tds)
 		else
 			cons = "variable";
 
-        printf("%s\t%d\t%s\t%f\n", elem->sb.nom, elem->sb.indice, cons, elem->sb.valeur);
+        printf("%s\t%d\t%s\t%d\n", elem->sb.nom, elem->sb.indice, cons, elem->sb.valeur);
         elem = elem->suivant;
 	}
 }

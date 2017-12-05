@@ -23,7 +23,7 @@ struct Symbole
     int indice;
     char *nom;
 	Boolean isConstant;
-	double valeur;
+	int valeur;
 };
 
 /**
@@ -54,6 +54,6 @@ static TableDesSymboles * const init_table();
 Symbole * get_symbol(TableDesSymboles *tds, char * name);
 Symbole * get_symbol_by_id(TableDesSymboles *tds, int id);
 Symbole * next_symbol(TableDesSymboles *tds, Symbole * sb);
-Symbole * new_temp(TableDesSymboles *tds, double v);
+Symbole * new_temp(TableDesSymboles *tds, int v);
 Symbole * add(TableDesSymboles *tds, Symbole s);
 #endif

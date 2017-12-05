@@ -17,18 +17,18 @@ TableDesSymboles *tds = NULL;
 }
 */
 
-%token NUM ID
+%token NUM ID STENCIL
 %type INT IF ELSE WHILE FOR BREAK CASE RETURN CONTINUE CONST
-%type SIZEOF STATIC TYPEDEF VOID MAIN PRINTF PRINTI SEMICOLON COND
-%type ASSIGN PLUS INCREM MINUS DECRINCREM MULT DIV PUISS  OPAR  CPAR
+%type SIZEOF STATIC TYPEDEF VOID MAIN PRINTF PRINTI ';' COND
+%type ASSIGN '+' INCREM '-' DECRINCREM '*' '/' '^'  '('  ')'
 %type EQ SUPEQ INFEQ TRUE FALSE
 
 %nonassoc IFX
 %nonassoc ELSE
 
-%left PLUS MINUS
-%left MULT DIV
-%right PUISS
+%left '+' '-'
+%left '*' '/'
+%right '^'
 %nonassoc UMINUS
 
 %type  expr
@@ -39,24 +39,24 @@ TableDesSymboles *tds = NULL;
 
 
 debut   :
-        expr SEMICOLON                      {}
-        | ID ASSIGN expr SEMICOLON         { }
-        | WHILE OPAR COND CPAR debut       { }
-        | FOR OPAR SEMICOLON expr SEMICOLON COND SEMICOLON expr CPAR debut       { }
-        | IF OPAR expr CPAR debut %prec IFX        {}
-        | IF OPAR expr CPAR debut ELSE  debut       {}
+        expr ';'                      {}
+        | ID ASSIGN expr ';'         { }
+        | WHILE '(' COND ')' debut       { }
+        | FOR '(' expr ';' COND ';' expr ')' debut       { }
+        | IF '(' expr ')' debut %prec IFX        {}
+        | IF '(' expr ')' debut ELSE  debut       {}
         ;
 
 expr :
         INTEGER                         { }
         | ID                      { }
-        | MINUS expr %prec UMINUS         {}
-        | expr PLUS expr                 { }
-        | expr MINUS expr                 {}
-        | expr MULT expr                 { }
-        | expr DIV expr                 { }
-        | expr SUP expr                 { }
-        | expr INF expr                 { }
+        | '-' expr %prec UMINUS         {}
+        | expr '+' expr                 { }
+        | expr '-' expr                 {}
+        | expr '*' expr                 { }
+        | expr '/' expr                 { }
+        | expr '>' expr                 { }
+        | expr '<' expr                 { }
         ;
 
 COND :
