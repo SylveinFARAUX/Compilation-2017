@@ -33,7 +33,7 @@ int main(){
 	show_table(tds);
 	
 	//recherche d'un symbole dans la table des symboles
-	Symbole *trouve = get_symbol(tds, "bBack");
+	Symbole *trouve = get_symbol(tds, temp->nom);
 	
 	ListeQuad *lq = init_QList();
 
@@ -50,6 +50,6 @@ int main(){
 	genquad(lq, PLUS, a.nom, temp->nom, ptr->nom, NULL);
 	
 	//génère le code mips dans le fichier ex.s, fichier chargeable avec l'interpreteur MARS4_5 (ou QtSpim)
-	generercodemips(tds, lq);  
+	//generercodemips(tds, lq);  
 	return 0;
 }

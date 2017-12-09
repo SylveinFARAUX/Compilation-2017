@@ -106,7 +106,7 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 	QElement *elem = lq->premier;
 	Quad *dataQuad = &elem->q;
 	
-	/*zone data du code mips*/
+	//zone data du code mips
 	fprintf(fichier_mips, ".data\n");
 	while (dataQuad != NULL)
 	{
@@ -125,25 +125,31 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 	}
 	fprintf(fichier_mips, "\tnewline:\t.asciiz \"\\n\"\n\tspace:\t.asciiz \" \"\n\ttermin:\t.asciiz \"program terminated\"\n");
 	
-	/*zone intructions du code mips (calcul arithmetique)*/
+	//zone intructions du code mips (calcul arithmetique)
 	elem = lq->premier;
 	dataQuad = &elem->q;
 	fprintf(fichier_mips, "\n\n");
 	fprintf(fichier_mips, ".text\n\tmain:\n");
-	show_table(tds);
 
 	while (dataQuad != NULL)
 	{
+		Symbole *op1 = NULL,
+				*op2 = NULL,
+				*res = NULL,
+				*var = NULL;
+				
 		switch(dataQuad->operateur)
 		{
 			case PLUS: //Si le quad demande de faire une addition
 				//on recherche les symboles dans la table des symboles
-				Symbole *op1 = get_symbol(tds, dataQuad->arg1);
-				Symbole	*op2 = get_symbol(tds, dataQuad->arg2);
-				Symbole	*res = get_symbol(tds, dataQuad->result);
+				op1 = get_symbol(tds, dataQuad->arg1);
+				op2 = get_symbol(tds, dataQuad->arg2);
+				res = get_symbol(tds, dataQuad->result);
+				
 				if (op1 == NULL)printf("%s est NULL !\n", dataQuad->arg1);
 				if (op2 == NULL)printf("%s est NULL !\n", dataQuad->arg2);
 				if (res == NULL)printf("%s est NULL !\n", dataQuad->result);
+				
 				if (op1 != NULL && op2 != NULL && res != NULL)
 				{
 					fprintf(fichier_mips, "\tlw $t0, %s  #chargement de l'entier dans $t0\n", op1->nom);
@@ -156,12 +162,14 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 			break;
 			case MINUS: //Si le quad demande de faire une soustraction
 				//on recherche les symboles dans la table des symboles
-				Symbole *op1 = get_symbol(tds, dataQuad->arg1);
-				Symbole	*op2 = get_symbol(tds, dataQuad->arg2);
-				Symbole	*res = get_symbol(tds, dataQuad->result);
+				op1 = get_symbol(tds, dataQuad->arg1);
+				op2 = get_symbol(tds, dataQuad->arg2);
+				res = get_symbol(tds, dataQuad->result);
+				
 				if (op1 == NULL)printf("%s est NULL !\n", dataQuad->arg1);
 				if (op2 == NULL)printf("%s est NULL !\n", dataQuad->arg2);
 				if (res == NULL)printf("%s est NULL !\n", dataQuad->result);
+				
 				if (op1 != NULL && op2 != NULL && res != NULL)
 				{
 					fprintf(fichier_mips, "\tlw $t0, %s  #chargement de l'entier dans $t0\n", op1->nom);
@@ -174,12 +182,14 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 			break;
 			case MULT:
 				//on recherche les symboles dans la table des symboles
-				Symbole *op1 = get_symbol(tds, dataQuad->arg1);
-				Symbole	*op2 = get_symbol(tds, dataQuad->arg2);
-				Symbole	*res = get_symbol(tds, dataQuad->result);
+				op1 = get_symbol(tds, dataQuad->arg1);
+				op2 = get_symbol(tds, dataQuad->arg2);
+				res = get_symbol(tds, dataQuad->result);
+				
 				if (op1 == NULL)printf("%s est NULL !\n", dataQuad->arg1);
 				if (op2 == NULL)printf("%s est NULL !\n", dataQuad->arg2);
 				if (res == NULL)printf("%s est NULL !\n", dataQuad->result);
+				
 				if (op1 != NULL && op2 != NULL && res != NULL)
 				{
 					fprintf(fichier_mips, "\tlw $t0, %s  #chargement de l'entier dans $t0\n", op1->nom);
@@ -192,12 +202,14 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 			break;
 			case DIV:
 				//on recherche les symboles dans la table des symboles
-				Symbole *op1 = get_symbol(tds, dataQuad->arg1);
-				Symbole	*op2 = get_symbol(tds, dataQuad->arg2);
-				Symbole	*res = get_symbol(tds, dataQuad->result);
+				op1 = get_symbol(tds, dataQuad->arg1);
+				op2 = get_symbol(tds, dataQuad->arg2);
+				res = get_symbol(tds, dataQuad->result);
+				
 				if (op1 == NULL)printf("%s est NULL !\n", dataQuad->arg1);
 				if (op2 == NULL)printf("%s est NULL !\n", dataQuad->arg2);
 				if (res == NULL)printf("%s est NULL !\n", dataQuad->result);
+				
 				if (op1 != NULL && op2 != NULL && res != NULL)
 				{
 					fprintf(fichier_mips, "\tlw $t0, %s  #chargement de l'entier dans $t0\n", op1->nom);
@@ -209,7 +221,7 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 					printf("Erreur : division avec des symboles qui n'existent pas");
 			break;
 			case SHOW:
-				Symbole *var = get_symbol(tds, dataQuad->arg1);
+				var = get_symbol(tds, dataQuad->arg1);
 			
 				//Affichage du resultat
 				fprintf(fichier_mips, "\n\tli $v0, 1  #appel systeme pour printer un ingeger\n");

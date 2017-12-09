@@ -1,18 +1,24 @@
 %{
-  #include <stdio.h>
-//#include "calc.tab.h"
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	#include "symbole.h"
+	#include "y.tab.h"
 %}
 
+LETTRE	[a-zA-Z]
+CHIFFRE [0-9]
 %%
 
-0|[1-9][0-9]*|0[0-7]+|0x[0-9a-fA-F]+ {
-    /*sscanf(yytext,"%li",&(yylval.intval));
-    /*return NUM;*/
-}
+{CHIFFRE}+					{
+							//sscanf(yytext,"%li",&(yylval.intval));
+							yylval.val = atoi(yytext);
+							return NUM;
+						}
 
-"#define"						  {printf("%s reconnu\n", yytext);/*return DEF_CONSTANT;*/}
-stencil						  {printf("%s reconnu\n", yytext);/*return STENCIL;*/}
-"int main()"				  {printf("%s reconnu\n", yytext);/*return MAIN_FUNCTION;*/}
+"#define"						  {return DEF_CONSTANT;}
+stencil						  {/*printf("%s reconnu\n", yytext);/*return STENCIL;*/}
+"int main()"				  {return MAIN_FUNCTION;}
 
 int     		              {printf("%s reconnu\n", yytext);/*return INT;*/}
 if      		              {printf("%s reconnu\n", yytext);/*return IF;*/}
@@ -34,7 +40,7 @@ printi                    {printf("%s reconnu\n", yytext);/*return PRINTI;*/}
 [or]                      {printf("%s reconnu\n", yytext);/*return OR;*/}
 [&&]                      {printf("%s reconnu\n", yytext);/*return AND;*/}
 
-";"|"="|"+"|"-"|"*"|"/"|"^"|"<"|">"|"("|")"			  {printf("%s reconnu\n", yytext);/*return yytext[0];*/}
+";"|"="|"+"|"-"|"*"|"/"|"^"|"<"|">"|"("|")"|"{"|"}"			  {printf("%s reconnu\n", yytext);/*return yytext[0];*/}
 
 "++"                      {printf("%s reconnu\n", yytext);/*return INCREM;*/}
 "--"                      {printf("%s reconnu\n", yytext);/*return DECRINCREM;*/}
@@ -46,25 +52,21 @@ true                      {printf("%s reconnu\n", yytext);/*return TRUE;*/}
 false                     {printf("%s reconnu\n", yytext);/*return FALSE;*/}
 
 '\n'                      {/*yyterminate();*/}
+<<EOF>>					  {printf("EOF\n"); yyterminate();}
 
-
-
-[[:alpha:]][[:alnum:]]* {
-    /*if ( yyleng > 7 )
-        fprintf(stderr,"Identifier '%s' too long, truncated\n",yytext);
-    strncpy(yylval.strval,yytext,7);
-    yylval.strval[7] = '\0';
-    /*return ID;*/
-}
+LETTRE+	{
+							/*[[:alpha:]][[:alnum:]]**/
+							if ( yyleng > 7 )
+								fprintf(stderr,"Identifier '%s' too long, truncated\n",yytext);
+							strncpy(yylval.identificateur,yytext,7);
+							yylval.identificateur[7] = '\0';
+							return ID;
+						}
 " "						  {}
-.+						  {printf("Erreur de syntaxe : %s\n", yytext); exit(0);}
+
 %%
 
 int yywrap (void)
 {
   return 1;
-}
-main(int argc, char *argv[]){
-	yylex();
-	return 0;
 }
