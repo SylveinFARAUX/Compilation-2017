@@ -50,7 +50,7 @@ void qshow_liste(ListeQuad *lq)
 	}
 
 	QElement *elem = lq->premier;
-	printf("La liste des quads contient %d elts :\nindice\tlabel\toperateur\targ1\targ2\targ3\tresult\n", lq->taille);
+	printf("La liste des quads contient %d elts :\nindice\tlabel\toperateur\targ1\targ2\tresult\n", lq->taille);
 
 	while (elem != NULL)
 	{
@@ -96,12 +96,16 @@ void qshow_liste(ListeQuad *lq)
 void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 {
 	FILE *fichier_mips = NULL;
-	fichier_mips = fopen("ex.s", "w+");
+	fichier_mips = fopen("sortie.s", "w+");
 	
 	if (fichier_mips == NULL){
-		printf("Erreur lors de l'ouverture de ex.spi\n");
+		printf("Erreur lors de l'ouverture de sortie.s\n");
 		return;
 	}
+	
+	
+	if (tds == NULL)printf("erreur : La table des symboles n'existe pas\n");
+	if (lq == NULL)printf("erreur  : La liste des quads n'existe pas\n");
 	
 	QElement *elem = lq->premier;
 	Quad *dataQuad = &elem->q;
@@ -113,17 +117,23 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 		if (dataQuad->operateur == CREATEVAR)//si le quad demande la création d'une variable
 		{
 			//on recherche le symbole dans la table des symboles
+
 			Symbole *trouve = get_symbol(tds, dataQuad->arg1);
-			
+
+			printf("nom : %d\n", trouve->valeur);
 			if (trouve != NULL)//Si on a trouvé le symbole en question
-				fprintf(fichier_mips, "\t%s:\t.float %f  #chargement du symbole %s\n", trouve->nom, trouve->valeur, trouve->nom);
+				fprintf(fichier_mips, "\t%s:\t.word %d  #chargement du symbole %s\n", trouve->nom, trouve->valeur, trouve->nom);
 			else
 				printf("Erreur : symbole %s non référencé dans la table des symboles\n", dataQuad->arg1);
+			
+			printf("flag 1 fin\n");
 		}
 		elem = elem->suivant;
 		dataQuad = &elem->q;
+		printf("flag 2\n");
 	}
 	fprintf(fichier_mips, "\tnewline:\t.asciiz \"\\n\"\n\tspace:\t.asciiz \" \"\n\ttermin:\t.asciiz \"program terminated\"\n");
+	
 	
 	//zone intructions du code mips (calcul arithmetique)
 	elem = lq->premier;
@@ -146,9 +156,9 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 				op2 = get_symbol(tds, dataQuad->arg2);
 				res = get_symbol(tds, dataQuad->result);
 				
-				if (op1 == NULL)printf("%s est NULL !\n", dataQuad->arg1);
-				if (op2 == NULL)printf("%s est NULL !\n", dataQuad->arg2);
-				if (res == NULL)printf("%s est NULL !\n", dataQuad->result);
+				if (op1 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg1);
+				if (op2 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg2);
+				if (res == NULL)printf("erreur : %s non declare !\n", dataQuad->result);
 				
 				if (op1 != NULL && op2 != NULL && res != NULL)
 				{
@@ -158,7 +168,7 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 					fprintf(fichier_mips, "\tsw $t2, %s  #store an integer in the %s variable\n", res->nom, res->nom);
 				}
 				else
-					printf("Erreur : addition avec des symboles qui n'existent pas");
+					return;
 			break;
 			case MINUS: //Si le quad demande de faire une soustraction
 				//on recherche les symboles dans la table des symboles
@@ -166,9 +176,9 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 				op2 = get_symbol(tds, dataQuad->arg2);
 				res = get_symbol(tds, dataQuad->result);
 				
-				if (op1 == NULL)printf("%s est NULL !\n", dataQuad->arg1);
-				if (op2 == NULL)printf("%s est NULL !\n", dataQuad->arg2);
-				if (res == NULL)printf("%s est NULL !\n", dataQuad->result);
+				if (op1 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg1);
+				if (op2 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg2);
+				if (res == NULL)printf("erreur : %s non declare !\n", dataQuad->result);
 				
 				if (op1 != NULL && op2 != NULL && res != NULL)
 				{
@@ -178,7 +188,7 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 					fprintf(fichier_mips, "\tsw $t2, %s  #store an integer in the %s variable\n", res->nom, res->nom);
 				}
 				else
-					printf("Erreur : soustraction avec des symboles qui n'existent pas");
+					return;
 			break;
 			case MULT:
 				//on recherche les symboles dans la table des symboles
@@ -186,9 +196,9 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 				op2 = get_symbol(tds, dataQuad->arg2);
 				res = get_symbol(tds, dataQuad->result);
 				
-				if (op1 == NULL)printf("%s est NULL !\n", dataQuad->arg1);
-				if (op2 == NULL)printf("%s est NULL !\n", dataQuad->arg2);
-				if (res == NULL)printf("%s est NULL !\n", dataQuad->result);
+				if (op1 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg1);
+				if (op2 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg2);
+				if (res == NULL)printf("erreur : %s non declare !\n", dataQuad->result);
 				
 				if (op1 != NULL && op2 != NULL && res != NULL)
 				{
@@ -198,7 +208,7 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 					fprintf(fichier_mips, "\tsw $t2, %s  #store an integer in the %s variable\n", res->nom, res->nom);
 				}
 				else
-					printf("Erreur : multiplication avec des symboles qui n'existent pas");
+					return;
 			break;
 			case DIV:
 				//on recherche les symboles dans la table des symboles
@@ -206,9 +216,9 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 				op2 = get_symbol(tds, dataQuad->arg2);
 				res = get_symbol(tds, dataQuad->result);
 				
-				if (op1 == NULL)printf("%s est NULL !\n", dataQuad->arg1);
-				if (op2 == NULL)printf("%s est NULL !\n", dataQuad->arg2);
-				if (res == NULL)printf("%s est NULL !\n", dataQuad->result);
+				if (op1 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg1);
+				if (op2 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg2);
+				if (res == NULL)printf("erreur : %s non declare !\n", dataQuad->result);
 				
 				if (op1 != NULL && op2 != NULL && res != NULL)
 				{
@@ -218,7 +228,20 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 					fprintf(fichier_mips, "\tsw $t2, %s  #store an integer in the %s variable\n", res->nom, res->nom);					
 				}
 				else
-					printf("Erreur : division avec des symboles qui n'existent pas");
+					return;
+			break;
+			case ASSIGN:
+				//on recherche les symboles dans la table des symboles
+				op1 = get_symbol(tds, dataQuad->arg1);
+				op2 = get_symbol(tds, dataQuad->arg2);
+				
+				if (op1 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg1);
+				if (op2 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg2);
+				
+				if (op1 != NULL && op2 != NULL)
+					fprintf(fichier_mips, "\tsw %s, %s  #store %s's value in the %s variable\n", op2->nom, op1->nom, op2->nom, op1->nom);								
+				else
+					return;
 			break;
 			case SHOW:
 				var = get_symbol(tds, dataQuad->arg1);

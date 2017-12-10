@@ -9,7 +9,8 @@
 
 extern void yyerror(const char * s);
 extern int yylex();
-//extern FILE * yyin;
+
+extern FILE * yyin;
 
 ListeQuad * lq = NULL;
 TableDesSymboles *tds = NULL;
@@ -25,10 +26,13 @@ TableDesSymboles *tds = NULL;
 
 %token <val> NUM 
 %token <identifiant> ID 
-%token DEF_CONSTANT MAIN_FUNCTION
+%token DEF_CONSTANT MAIN_FUNCTION MAIN_RETURN INT
 
 %type <Null> prepro
+%type <Null> statement
+%type <Null> liststatement
 %type <Null> defConstant
+%type <ptr> expr
 //%type COND expr
 
 
@@ -40,14 +44,45 @@ TableDesSymboles *tds = NULL;
 
 %%
 
-file	:	prepro MAIN_FUNCTION '{' '}'	{printf("file -> prepro MAIN_FUNCTION { }\n");return;}
+file	:	prepro MAIN_FUNCTION '{' liststatement MAIN_RETURN ';' '}'	{printf("file -> prepro MAIN_FUNCTION { }\n");return;}
 		;
 
-prepro	:	prepro defConstant		{printf("prepro -> prepro defConstant\n");}
-		|	defConstant				{printf("prepro -> defConstant\n");}
+prepro	:	prepro defConstant		{}
+		|	defConstant				{}
 		;
 		
-defConstant:	DEF_CONSTANT ID NUM	{printf("defConstant -> DEF_CONSTANT ID NUM\n");
+defConstant:	DEF_CONSTANT ID NUM	
+				{
+					Symbole s;
+					
+					int i;
+					char intermediare[$2.tailleID];
+					for (i = 0 ; i < $2.tailleID ; i++)
+						intermediare[i] = $2.chaine[i];
+					intermediare[$2.tailleID] = '\0';
+					
+					s.nom = strdup(intermediare);
+					
+					//s.isConstant = True;
+					s.valeur = $3;
+					add(tds, s);
+					genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);//*/
+				}
+				|	{/*Il peut ne pas y avoir de definition de constant dans la zone préprocesseur*/}
+				;
+
+liststatement:	liststatement statement ';'			{}
+		|statement ';'                      {}
+        /*| ID ASSIGN expr ';'         { }
+        | WHILE '(' COND ')' debut       { }
+        | FOR '(' expr ';' COND ';' expr ')' debut       { }
+        | IF '(' expr ')' debut %prec IFX        {}
+        | IF '(' expr ')' debut ELSE  debut       {}*/
+		|	{}
+        ;
+	
+statement :	INT ID					
+		{
 			Symbole s;
 			
 			int i;
@@ -58,29 +93,65 @@ defConstant:	DEF_CONSTANT ID NUM	{printf("defConstant -> DEF_CONSTANT ID NUM\n")
 			
 			s.nom = strdup(intermediare);
 			
-			
-			printf("s.nom contient ( %d ) : %s\n", $2.tailleID, s.nom);
-			printf("$3 contient : %d\n", $3);
-			//s.isConstant = True;
-			s.valeur = $3;
 			add(tds, s);
-			return;
-			//genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);//*/
+			genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);
 		}
-		|	{/*Il peut ne pas y avoir de definition de constant dans la zone préprocesseur*/}
+		
+		|INT ID '=' expr					
+		{
+			Symbole s;
+			
+			int i;
+			char intermediare[$2.tailleID];
+			for (i = 0 ; i < $2.tailleID ; i++)
+				intermediare[i] = $2.chaine[i];
+			intermediare[$2.tailleID] = '\0';
+			
+			s.nom = strdup(intermediare);
+			s.valeur = $4->valeur;
+			add(tds, s);
+			genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);
+		}
+		|expr '=' expr		{
+			genquad(lq, ASSIGN, $1->nom, $2->nom, NULL, NULL);
+		}
 		;
-
-/*debut   :	expr ';'                      {}
-        | ID ASSIGN expr ';'         { }
-        | WHILE '(' COND ')' debut       { }
-        | FOR '(' expr ';' COND ';' expr ')' debut       { }
-        | IF '(' expr ')' debut %prec IFX        {}
-        | IF '(' expr ')' debut ELSE  debut       {}
-		|	{}
-        ;
-
-expr :	INTEGER                         { }
-        | ID                      { }
+		
+expr	:	ID {
+			Symbole *trouve = get_symbol(tds, $1.chaine);
+			
+			if (trouve == NULL){
+				printf("erreur : la variable %s n'existe pas dans la table des symboles\n", $1.chaine);
+				return;
+			}
+			$$ = trouve;
+		}	
+		|	NUM	{
+			$$ = new_temp(tds, $1);
+			genquad(lq, CREATEVAR, $$->nom, NULL, NULL, NULL);
+		}
+		| expr '+' expr	{
+			$$ = new_temp(tds, 0);
+			genquad(lq, CREATEVAR, $$->nom, NULL, NULL, NULL);
+			genquad(lq, PLUS, $1->nom, $3->nom, $$->nom, NULL);
+		}
+		| expr '-' expr	{
+			$$ = new_temp(tds, 0);
+			genquad(lq, CREATEVAR, $$->nom, NULL, NULL, NULL);
+			genquad(lq, MINUS, $1->nom, $3->nom, $$->nom, NULL);
+		}
+		| expr '/' expr	{
+			$$ = new_temp(tds, 0);
+			genquad(lq, CREATEVAR, $$->nom, NULL, NULL, NULL);
+			genquad(lq, DIV, $1->nom, $3->nom, $$->nom, NULL);
+		}
+		| expr '*' expr	{
+			$$ = new_temp(tds, 0);
+			genquad(lq, CREATEVAR, $$->nom, NULL, NULL, NULL);
+			genquad(lq, MULT, $1->nom, $3->nom, $$->nom, NULL);
+		}
+		;
+        /*| ID                      { }
         | '-' expr %prec UMINUS         {}
         | expr '+' expr                 { }
         | expr '-' expr                 {}
@@ -111,12 +182,14 @@ int main (int argc, char *argv[])
 	tds = init_table();
 	lq = init_QList();
 	
-	//yyin = fopen(argv[1],"r");
+	yyin = fopen(argv[1],"r");
 	
     yyparse();
 	
 	show_table(tds);
-	//qshow_liste(lq);
+	qshow_liste(lq);
+	
+	genererCodeMIPS(tds, lq);
 	
 	//fclose(yyin);
 	

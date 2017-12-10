@@ -22,8 +22,8 @@ CHIFFRE [0-9]
 "#define"						  {/*printf("%s reconnu\n", yytext);*/return DEF_CONSTANT;}
 stencil						  {/*printf("%s reconnu\n", yytext);return STENCIL;*/}
 "int main()"				  {return MAIN_FUNCTION;}
-
-int     		              {printf("%s reconnu\n", yytext);/*return INT;*/}
+"return 0"					  {return MAIN_RETURN;}
+int     		              {return INT;}
 if      		              {printf("%s reconnu\n", yytext);/*return IF;*/}
 else     		              {printf("%s reconnu\n", yytext);/*return ELSE;*/}
 while     		            {printf("%s reconnu\n", yytext);/*return WHILE;*/}
@@ -37,7 +37,6 @@ sizeof                    {printf("%s reconnu\n", yytext);/*return SIZEOF;*/}
 static                    {printf("%s reconnu\n", yytext);/*return STATIC;*/}
 typedef                   {printf("%s reconnu\n", yytext);/*return TYPEDEF;*/}
 void                      {printf("%s reconnu\n", yytext);/*return VOID;*/}
-main                      {printf("%s reconnu\n", yytext);/*return MAIN;*/}
 printf                    {printf("%s reconnu\n", yytext);/*return PRINTF;*/}
 printi                    {printf("%s reconnu\n", yytext);/*return PRINTI;*/}
 [or]                      {printf("%s reconnu\n", yytext);/*return OR;*/}
