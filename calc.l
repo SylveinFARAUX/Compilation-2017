@@ -37,24 +37,9 @@ printf                    { return PRINTF;}
 printi                    { return PRINTI;}
 [or]                      { return OR;}
 [&&]                      { return AND;}
-";"                       { return SEMICOLON;}
-"="                       { return ASSIGN;}
-"+"                       { return PLUS;}
-"++"                      { return INCREM;}
-"-"                       { return MINUS;}
-"--"                      { return DECRINCREM;}
-"*"                       { return MULT;}
-"/"                       { return(DIV);}
-"^"                       { return(PUISS);}
-"<"                       { return(SUP);}
-">"                       { return(INF);}
 "=="                      { return(EQ);}
 "<="                      { return(SUPEQ);}
 ">="                      { return(INFEQ);}
-"("                       { return OPAR;}
-")"                       { return CPAR; }
-true                      { return TRUE;}
-false                     { return FALSE; }
 
 '\n'                      { yyterminate();}
 
