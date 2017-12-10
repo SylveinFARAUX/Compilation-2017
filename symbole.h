@@ -5,7 +5,14 @@ typedef enum Boolean Boolean;
 typedef struct Symbole Symbole;
 typedef struct Element Element;
 typedef struct TableDesSymboles TableDesSymboles;
+typedef struct Identificateur Identificateur;
 
+struct Identificateur
+{
+	char * chaine;
+	int tailleID;
+}; 
+	
 /**
  * @enum les booleens qui seront utilisés seront de type "boolean" et prendront True ou False
  */

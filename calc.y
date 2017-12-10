@@ -13,21 +13,18 @@ extern int yylex();
 
 ListeQuad * lq = NULL;
 TableDesSymboles *tds = NULL;
-
-
-
-
 %}
+
 %union {
 	int val;
 	Symbole* ptr;
-	char * identificateur;
+	Identificateur* identifiant;
 	
 	char Null;
 }
 
 %token <val> NUM 
-%token <identificateur> ID 
+%token <identifiant> ID 
 %token DEF_CONSTANT MAIN_FUNCTION
 
 %type <Null> prepro
@@ -43,20 +40,24 @@ TableDesSymboles *tds = NULL;
 
 %%
 
-file	:	defConstant/*prepro MAIN_FUNCTION '{' '}'*/	{printf("file -> prepro MAIN_FUNCTION { }\n");return;}
+file	:	prepro MAIN_FUNCTION '{' '}'	{printf("file -> prepro MAIN_FUNCTION { }\n");return;}
 		;
 
 prepro	:	prepro defConstant		{printf("prepro -> prepro defConstant\n");}
 		|	defConstant				{printf("prepro -> defConstant\n");}
 		;
 		
-defConstant:	DEF_CONSTANT ID /*NUM*/	{printf("defConstant -> DEF_CONSTANT ID NUM\n");
-			/*Symbole s;
-			s.nom = $2;
-			s.isConstant = True;
+defConstant:	DEF_CONSTANT ID NUM	{printf("defConstant -> DEF_CONSTANT ID NUM\n");
+			Symbole s;
+			s.nom = $2.chaine;
+			
+			printf("$2 contient ( %d ) : %s\n", $2.tailleID, $2.chaine);
+			printf("$3 contient : %d\n", $3);
+			//s.isConstant = True;
 			s.valeur = $3;
 			add(tds, s);
-			genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);*/
+			return;
+			//genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);
 		}
 		|	{/*Il peut ne pas y avoir de definition de constant dans la zone préprocesseur*/}
 		;
@@ -106,7 +107,8 @@ int main (int argc, char *argv[])
 	
     yyparse();
 	
-	qshow_liste(lq);
+	show_table(tds);
+	//qshow_liste(lq);
 	
 	//fclose(yyin);
 	
