@@ -18,7 +18,7 @@ TableDesSymboles *tds = NULL;
 %union {
 	int val;
 	Symbole* ptr;
-	Identificateur* identifiant;
+	Identificateur identifiant;
 	
 	char Null;
 }
@@ -49,15 +49,23 @@ prepro	:	prepro defConstant		{printf("prepro -> prepro defConstant\n");}
 		
 defConstant:	DEF_CONSTANT ID NUM	{printf("defConstant -> DEF_CONSTANT ID NUM\n");
 			Symbole s;
-			s.nom = $2.chaine;
 			
-			printf("$2 contient ( %d ) : %s\n", $2.tailleID, $2.chaine);
+			int i;
+			char intermediare[$2.tailleID];
+			for (i = 0 ; i < $2.tailleID ; i++)
+				intermediare[i] = $2.chaine[i];
+			intermediare[$2.tailleID] = '\0';
+			
+			s.nom = strdup(intermediare);
+			
+			
+			printf("s.nom contient ( %d ) : %s\n", $2.tailleID, s.nom);
 			printf("$3 contient : %d\n", $3);
 			//s.isConstant = True;
 			s.valeur = $3;
 			add(tds, s);
 			return;
-			//genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);
+			//genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);//*/
 		}
 		|	{/*Il peut ne pas y avoir de definition de constant dans la zone préprocesseur*/}
 		;

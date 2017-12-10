@@ -58,10 +58,10 @@ false                     {printf("%s reconnu\n", yytext);/*return FALSE;*/}
 <<EOF>>					  {printf("EOF\n"); yyterminate();}
 
 [a-zA-Z](([a-zA-Z])|([0-9]))*	{
-							
-							yylval.chaine = yytext;
-							yylval.tailleID = yyleng;
-							printf("yytext contient ( %d ) : %s\n", yyleng, yylval.identificateur);
+							//yylval.ii = yytext;
+							yylval.identifiant.chaine = yytext;
+							yylval.identifiant.tailleID = yyleng;
+							//printf("yytext contient ( %d ) : %s\n", yyleng, yylval.identificateur);
 							//yylval.chaine[yyleng] = '\0';
 							return ID;
 						}
