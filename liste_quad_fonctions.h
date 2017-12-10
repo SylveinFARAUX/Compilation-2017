@@ -120,17 +120,13 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 
 			Symbole *trouve = get_symbol(tds, dataQuad->arg1);
 
-			printf("nom : %d\n", trouve->valeur);
 			if (trouve != NULL)//Si on a trouvé le symbole en question
 				fprintf(fichier_mips, "\t%s:\t.word %d  #chargement du symbole %s\n", trouve->nom, trouve->valeur, trouve->nom);
 			else
 				printf("Erreur : symbole %s non référencé dans la table des symboles\n", dataQuad->arg1);
-			
-			printf("flag 1 fin\n");
 		}
 		elem = elem->suivant;
 		dataQuad = &elem->q;
-		printf("flag 2\n");
 	}
 	fprintf(fichier_mips, "\tnewline:\t.asciiz \"\\n\"\n\tspace:\t.asciiz \" \"\n\ttermin:\t.asciiz \"program terminated\"\n");
 	
@@ -239,7 +235,10 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 				if (op2 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg2);
 				
 				if (op1 != NULL && op2 != NULL)
-					fprintf(fichier_mips, "\tsw %s, %s  #store %s's value in the %s variable\n", op2->nom, op1->nom, op2->nom, op1->nom);								
+				{
+					fprintf(fichier_mips, "\tlw $t0, %s  #store %s's value in the $t0 variable\n", op2->nom, op2->nom);								
+					fprintf(fichier_mips, "\tsw $t0, %s  #store $t0's value in the %s variable\n", op1->nom, op1->nom);								
+				}
 				else
 					return;
 			break;
