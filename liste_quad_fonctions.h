@@ -77,6 +77,12 @@ void qshow_liste(ListeQuad *lq)
 			case EQUAL:
 				op = "EQUAL";
 			break;
+			case CREATEVAR:
+				op = "CREATEVAR";
+			break;
+			case SHOW:
+				op = "SHOW";
+			break;
 			default:
 				op = "non reconnu";
 			break;
@@ -236,6 +242,8 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 				
 				if (op1 != NULL && op2 != NULL)
 				{
+					//#julie = i operation
+					fprintf(fichier_mips, "\n\t#%s = %s operation\n", op1->nom, op2->nom);					
 					fprintf(fichier_mips, "\tlw $t0, %s  #store %s's value in the $t0 variable\n", op2->nom, op2->nom);								
 					fprintf(fichier_mips, "\tsw $t0, %s  #store $t0's value in the %s variable\n", op1->nom, op1->nom);								
 				}

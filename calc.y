@@ -26,7 +26,7 @@ TableDesSymboles *tds = NULL;
 
 %token <val> NUM 
 %token <identifiant> ID 
-%token DEF_CONSTANT MAIN_FUNCTION MAIN_RETURN INT
+%token DEF_CONSTANT MAIN_FUNCTION MAIN_RETURN INT PRINTI DECREMENT INCREMENT
 
 %type <Null> prepro
 %type <Null> statement
@@ -71,13 +71,8 @@ defConstant:	DEF_CONSTANT ID NUM
 				|	{/*Il peut ne pas y avoir de definition de constant dans la zone préprocesseur*/}
 				;
 
-liststatement:	liststatement statement ';'			{}
+liststatement: statement ';' liststatement			{}
 		|statement ';'                      {}
-        /*| ID ASSIGN expr ';'         { }
-        | WHILE '(' COND ')' debut       { }
-        | FOR '(' expr ';' COND ';' expr ')' debut       { }
-        | IF '(' expr ')' debut %prec IFX        {}
-        | IF '(' expr ')' debut ELSE  debut       {}*/
 		|	{}
         ;
 	
@@ -111,14 +106,25 @@ statement :	INT ID
 			s.valeur = $4->valeur;
 			add(tds, s);
 			genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);
+			genquad(lq, ASSIGN, s.nom, $4->nom, NULL, NULL);
 		}
 		|expr '=' expr		{
-			genquad(lq, ASSIGN, $1->nom, $2->nom, NULL, NULL);
+			genquad(lq, ASSIGN, $1->nom, $3->nom, NULL, NULL);
+		}
+		|PRINTI '(' expr ')'	{
+			genquad(lq, SHOW, $3->nom, NULL, NULL, NULL);
 		}
 		;
 		
 expr	:	ID {
-			Symbole *trouve = get_symbol(tds, $1.chaine);
+	
+			int i;
+			char intermediaire[$1.tailleID];
+			for (i = 0 ; i < $1.tailleID ; i++)
+				intermediaire[i] = $1.chaine[i];
+			intermediaire[$1.tailleID] = '\0';
+			
+			Symbole *trouve = get_symbol(tds, intermediaire);
 			
 			if (trouve == NULL){
 				printf("erreur : la variable %s n'existe pas dans la table des symboles\n", $1.chaine);
@@ -150,25 +156,41 @@ expr	:	ID {
 			genquad(lq, CREATEVAR, $$->nom, NULL, NULL, NULL);
 			genquad(lq, MULT, $1->nom, $3->nom, $$->nom, NULL);
 		}
+		| ID INCREMENT	{
+			$$ = new_temp(tds, 0);
+			Symbole* temp = new_temp(tds, 1);
+			
+			int i;
+			char intermediaire[$1.tailleID];
+
+			for (i = 0 ; i < $1.tailleID ; i++)
+				intermediaire[i] = $1.chaine[i];
+			intermediaire[$1.tailleID] = '\0';
+			
+			char *p = strdup(intermediaire);
+			
+			genquad(lq, CREATEVAR, $$->nom, NULL, NULL, NULL);
+			genquad(lq, CREATEVAR, temp->nom, NULL, NULL, NULL);
+			genquad(lq, PLUS, p, temp->nom, $$->nom, NULL);
+		}
+		| ID DECREMENT	{
+			$$ = new_temp(tds, 0);
+			Symbole* temp = new_temp(tds, 1);
+			
+			int i;
+			char intermediaire[$1.tailleID];
+
+			for (i = 0 ; i < $1.tailleID ; i++)
+				intermediaire[i] = $1.chaine[i];
+			intermediaire[$1.tailleID] = '\0';
+			
+			char *p = strdup(intermediaire);
+			
+			genquad(lq, CREATEVAR, $$->nom, NULL, NULL, NULL);
+			genquad(lq, CREATEVAR, temp->nom, NULL, NULL, NULL);
+			genquad(lq, MINUS, p, temp->nom, $$->nom, NULL);
+		}
 		;
-        /*| ID                      { }
-        | '-' expr %prec UMINUS         {}
-        | expr '+' expr                 { }
-        | expr '-' expr                 {}
-        | expr '*' expr                 { }
-        | expr '/' expr                 { }
-        | expr '>' expr                 { }
-        | expr '<' expr                 { }
-        ;
-
-COND	:	expr EQ expr                 {}
-        | expr SUPEQ expr                 { }
-        | expr INFEQ expr                 { }
-        | TRUE                 { }
-        | FALSE                 { }
-        ;
-*/
-
 %%
 
 void yyerror(const char * s)

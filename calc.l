@@ -24,6 +24,8 @@ stencil						  {/*printf("%s reconnu\n", yytext);return STENCIL;*/}
 "int main()"				  {return MAIN_FUNCTION;}
 "return 0"					  {return MAIN_RETURN;}
 int     		              {return INT;}
+"printi"	                  {return PRINTI;}
+
 if      		              {printf("%s reconnu\n", yytext);/*return IF;*/}
 else     		              {printf("%s reconnu\n", yytext);/*return ELSE;*/}
 while     		            {printf("%s reconnu\n", yytext);/*return WHILE;*/}
@@ -37,15 +39,14 @@ sizeof                    {printf("%s reconnu\n", yytext);/*return SIZEOF;*/}
 static                    {printf("%s reconnu\n", yytext);/*return STATIC;*/}
 typedef                   {printf("%s reconnu\n", yytext);/*return TYPEDEF;*/}
 void                      {printf("%s reconnu\n", yytext);/*return VOID;*/}
-printf                    {printf("%s reconnu\n", yytext);/*return PRINTF;*/}
-printi                    {printf("%s reconnu\n", yytext);/*return PRINTI;*/}
+printf                    {/*return PRINTF;*/}                               
 [or]                      {printf("%s reconnu\n", yytext);/*return OR;*/}
 [&&]                      {printf("%s reconnu\n", yytext);/*return AND;*/}
 
-";"|"="|"+"|"-"|"*"|"/"|"^"|"<"|">"|"("|")"|"{"|"}"			  {return yytext[0];}
+";"|"="|"+"|"-"|"*"|"/"|"^"|"<"|">"|"("|")"|"{"|"}"		  {return yytext[0];}
 
-"++"                      {printf("%s reconnu\n", yytext);/*return INCREM;*/}
-"--"                      {printf("%s reconnu\n", yytext);/*return DECRINCREM;*/}
+"++"                      {return INCREMENT;}
+"--"                      {return DECREMENT;}
 "=="                      {printf("%s reconnu\n", yytext);/*return(EQ);*/}
 "<="                      {printf("%s reconnu\n", yytext);/*return(SUPEQ);*/}
 ">="                      {printf("%s reconnu\n", yytext);/*return(INFEQ);*/}
@@ -53,7 +54,7 @@ printi                    {printf("%s reconnu\n", yytext);/*return PRINTI;*/}
 true                      {printf("%s reconnu\n", yytext);/*return TRUE;*/}
 false                     {printf("%s reconnu\n", yytext);/*return FALSE;*/}
 
-
+" "|"\n"|"\t"			  {}
 <<EOF>>					  {printf("EOF\n"); yyterminate();}
 
 [a-zA-Z](([a-zA-Z])|([0-9]))*	{
