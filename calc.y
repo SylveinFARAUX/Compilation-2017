@@ -26,6 +26,7 @@ TableDesSymboles *tds = NULL;
 
 %token <val> NUM 
 %token <identifiant> ID 
+%token <identifiant> ASCII
 %token DEF_CONSTANT MAIN_FUNCTION MAIN_RETURN INT PRINTI DECREMENT INCREMENT PRINTF
 
 %type <Null> prepro
@@ -44,7 +45,7 @@ TableDesSymboles *tds = NULL;
 
 %%
 
-file	:	prepro MAIN_FUNCTION '{' liststatement MAIN_RETURN ';' '}'	{printf("file -> prepro MAIN_FUNCTION { }\n");return;}
+file	:	prepro MAIN_FUNCTION '{' liststatement MAIN_RETURN ';' '}'	{printf("compilation terminated successfully\n");return;}
 		;
 
 prepro	:	prepro defConstant		{}
@@ -63,7 +64,6 @@ defConstant:	DEF_CONSTANT ID NUM
 					
 					s.nom = strdup(intermediare);
 					
-					//s.isConstant = True;
 					s.valeur = $3;
 					add(tds, s);
 					genquad(lq, CREATEVAR, s.nom, NULL, NULL, NULL);//*/
@@ -114,12 +114,12 @@ statement :	INT ID
 		|PRINTI '(' expr ')'	{
 			genquad(lq, SHOW, $3->nom, NULL, NULL, NULL);
 		}
-		|PRINTF '(' '"' ID '"' ')' {
+		|PRINTF '(' ASCII ')' {
 			int i;
-			char intermediaire[$4.tailleID];
-			for (i = 0 ; i < $4.tailleID ; i++)
-				intermediaire[i] = $4.chaine[i];
-			intermediaire[$4.tailleID] = '\0';
+			char intermediaire[$3.tailleID-2];
+			for (i = 1 ; i < $3.tailleID-1 ; i++)
+				intermediaire[i-1] = $3.chaine[i];
+			intermediaire[$3.tailleID-2] = '\0';
 			char *p = strdup(intermediaire);
 			
 			Symbole * temp = new_stringTemp(tds, p);
