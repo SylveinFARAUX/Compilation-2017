@@ -9,7 +9,7 @@ typedef struct quad Quad;
 typedef struct QElement QElement;
 typedef struct ListeQuad ListeQuad;
 
-enum OPERATEUR{ASSIGN, CREATEVAR, PLUS, MULT, MINUS, DIV, SHOW, GOTO, EQUAL};
+enum OPERATEUR{ASSIGN, CREATEVAR, PLUS, MULT, MINUS, DIV, SHOW, GOTO, EQUAL, CREATESTRING, SHOWSTRING};
 enum ARGUMENT_TYPE{SYMBOLE, LABEL, UNDEFINED};
 
 struct quad{

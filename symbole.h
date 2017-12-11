@@ -28,6 +28,7 @@ enum Boolean
 struct Symbole
 {
     int indice;
+	char *chaine;
     char *nom;
 	Boolean isConstant;
 	int valeur;

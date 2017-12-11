@@ -87,6 +87,32 @@ Symbole * new_temp(TableDesSymboles *tds, int v)
 	return get_symbol_by_id(tds, tds->taille-1);
 }
 
+Symbole * new_stringTemp(TableDesSymboles *tds, char * v)
+{
+	int nDigits;
+	if (tds->taille > 0)
+		nDigits = floor(log10(abs(tds->taille))) + 1;
+	else
+		nDigits = 1;
+
+	char taille[nDigits+1];
+	sprintf(taille, "%d", tds->taille);
+	
+	//creation du mot final
+	char buffer[5+nDigits];
+	strcpy(buffer, "temp");
+	strcat(buffer, taille);
+	buffer[4+nDigits] = '\0';
+	Symbole sb;
+	sb.nom = strdup(buffer);
+	sb.isConstant = True;
+	sb.chaine = v;
+
+	push_back(tds, sb);
+	
+	return get_symbol_by_id(tds, tds->taille-1);
+}
+
 /**
  * @brief Ajoute un symbole dans la table des symboles
  * @param tds Pointeur sur la table des symboles

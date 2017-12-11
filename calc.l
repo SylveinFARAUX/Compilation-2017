@@ -39,11 +39,11 @@ sizeof                    {printf("%s reconnu\n", yytext);/*return SIZEOF;*/}
 static                    {printf("%s reconnu\n", yytext);/*return STATIC;*/}
 typedef                   {printf("%s reconnu\n", yytext);/*return TYPEDEF;*/}
 void                      {printf("%s reconnu\n", yytext);/*return VOID;*/}
-printf                    {/*return PRINTF;*/}                               
+printf                    {return PRINTF;}                               
 [or]                      {printf("%s reconnu\n", yytext);/*return OR;*/}
 [&&]                      {printf("%s reconnu\n", yytext);/*return AND;*/}
 
-";"|"="|"+"|"-"|"*"|"/"|"^"|"<"|">"|"("|")"|"{"|"}"		  {return yytext[0];}
+";"|"="|"+"|"-"|"*"|"/"|"^"|"<"|">"|"("|")"|"{"|"}"|"\""		  {return yytext[0];}
 
 "++"                      {return INCREMENT;}
 "--"                      {return DECREMENT;}

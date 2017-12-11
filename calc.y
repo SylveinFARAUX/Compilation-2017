@@ -26,7 +26,7 @@ TableDesSymboles *tds = NULL;
 
 %token <val> NUM 
 %token <identifiant> ID 
-%token DEF_CONSTANT MAIN_FUNCTION MAIN_RETURN INT PRINTI DECREMENT INCREMENT
+%token DEF_CONSTANT MAIN_FUNCTION MAIN_RETURN INT PRINTI DECREMENT INCREMENT PRINTF
 
 %type <Null> prepro
 %type <Null> statement
@@ -113,6 +113,19 @@ statement :	INT ID
 		}
 		|PRINTI '(' expr ')'	{
 			genquad(lq, SHOW, $3->nom, NULL, NULL, NULL);
+		}
+		|PRINTF '(' '"' ID '"' ')' {
+			int i;
+			char intermediaire[$4.tailleID];
+			for (i = 0 ; i < $4.tailleID ; i++)
+				intermediaire[i] = $4.chaine[i];
+			intermediaire[$4.tailleID] = '\0';
+			char *p = strdup(intermediaire);
+			
+			Symbole * temp = new_stringTemp(tds, p);
+			
+			genquad(lq, CREATESTRING, temp->nom, NULL, NULL, NULL);
+			genquad(lq, SHOWSTRING, temp->nom, NULL, NULL, NULL);
 		}
 		;
 		

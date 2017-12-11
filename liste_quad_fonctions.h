@@ -83,6 +83,12 @@ void qshow_liste(ListeQuad *lq)
 			case SHOW:
 				op = "SHOW";
 			break;
+			case CREATESTRING:
+				op = "CREATESTRING";
+			break;
+			case SHOWSTRING:
+				op = "SHOWSTRING";
+			break;
 			default:
 				op = "non reconnu";
 			break;
@@ -123,11 +129,20 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 		if (dataQuad->operateur == CREATEVAR)//si le quad demande la création d'une variable
 		{
 			//on recherche le symbole dans la table des symboles
-
 			Symbole *trouve = get_symbol(tds, dataQuad->arg1);
 
 			if (trouve != NULL)//Si on a trouvé le symbole en question
 				fprintf(fichier_mips, "\t%s:\t.word %d  #chargement du symbole %s\n", trouve->nom, trouve->valeur, trouve->nom);
+			else
+				printf("Erreur : symbole %s non référencé dans la table des symboles\n", dataQuad->arg1);
+		}
+		else if (dataQuad->operateur == CREATESTRING)//si le quad demande la création d'une chaine
+		{
+			//on recherche le symbole dans la table des symboles
+			Symbole *trouve = get_symbol(tds, dataQuad->arg1);
+
+			if (trouve != NULL)//Si on a trouvé le symbole en question
+				fprintf(fichier_mips, "\t%s:\t.asciiz \"%s\"\n", trouve->nom, trouve->chaine);
 			else
 				printf("Erreur : symbole %s non référencé dans la table des symboles\n", dataQuad->arg1);
 		}
@@ -260,6 +275,19 @@ void genererCodeMIPS(TableDesSymboles *tds, ListeQuad *lq)
 				
 				//retour à la ligne
 				fprintf(fichier_mips, "\tli $v0,4\n\tla $a0,newline\n\tsyscall\n");
+			break;
+			case SHOWSTRING:
+				op1 = get_symbol(tds, dataQuad->arg1);
+				if (op1 == NULL)printf("erreur : %s non declare !\n", dataQuad->arg1);
+				
+				if (op1 != NULL)
+				{
+					fprintf(fichier_mips, "\n\t#affichage de la chaine %s\n", op1->chaine);
+					fprintf(fichier_mips, "\tli $v0,4\n\tla $a0,%s\n\tsyscall\n", op1->nom);
+				}
+				else
+					return;
+				
 			break;
 		}
 		
